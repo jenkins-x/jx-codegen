@@ -11,7 +11,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/cobra v1.0.0
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	golang.org/x/tools v0.0.0-20200702044944-0cc1aa72b347
 	k8s.io/kube-openapi v0.0.0-20200615155156-dffdd1682719
 )
