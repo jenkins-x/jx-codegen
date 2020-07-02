@@ -112,7 +112,10 @@ func GoGet(path string, version string, gopath string, goModules bool, sourceOnl
 	dir := filepath.Join(parts...)
 	if !goModules && version != "" {
 
-		branchNameUUID := uuid.NewV4()
+		branchNameUUID, err := uuid.NewV4()
+		if err != nil {
+			return errors.Wrapf(err, "getting uuid")
+		}
 		branchName := branchNameUUID.String()
 		oldBranchName, err := branch(dir)
 		if err != nil {
