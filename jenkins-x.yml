@@ -1,0 +1,35 @@
+buildPack: none
+pipelineConfig:
+  pipelines:
+    pullRequest:
+      pipeline:
+        agent:
+          image: gcr.io/jenkinsxio/builder-go
+        stages:
+        - name: ci
+          environment:
+          - name: BASE_WORKSPACE
+            value: /workspace/source
+          - name: GOPATH
+            value: /workspace/go
+          - name: PATH
+            value: "/usr/local/git/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspace/go/bin"
+          steps:
+          - name: test
+            command: make
+            image: golang:1.13.10
+            args:
+            - test
+            dir: /workspace/source
+          - name: lint
+            command: ./hack/linter.sh
+            image: golang:1.13.10
+    release:
+      pipeline:
+        agent:
+          image: gcr.io/jenkinsxio/builder-go
+        stages:
+        - name: release
+          steps:
+          - name: changelog
+            command: ./changelog.sh
