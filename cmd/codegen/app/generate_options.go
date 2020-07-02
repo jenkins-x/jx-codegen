@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/jenkins-x/jx-logging/pkg/log"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
 	"github.com/jenkins-x/jx-codegen/cmd/codegen/util"
@@ -59,11 +59,11 @@ func (o *GenerateOptions) configure() error {
 	}
 
 	if o.Verbose {
-		err := util.SetLevel(logrus.DebugLevel.String())
+		err := util.SetLevel("debug")
 		if err != nil {
 			return errors.Wrapf(err, "setting log level to %s", o.LogLevel)
 		}
-		util.AppLogger().Debugf("debug logging enabled")
+		log.Logger().Debugf("debug logging enabled")
 	}
 	err = util.EnsureGoPath()
 	if err != nil {

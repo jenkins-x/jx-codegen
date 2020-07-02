@@ -5,13 +5,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/jenkins-x/jx-logging/pkg/log"
+
 	"github.com/jenkins-x/jx-codegen/cmd/codegen/util"
 	"github.com/pkg/errors"
 )
 
 func defaultGenerate(generator string, name string, groupsWithVersions []string, inputPackage string,
 	outputPackage string, outputBase string, boilerplateFile string, gopath string, args ...string) error {
-	util.AppLogger().Infof("generating %s structs for %s at %s\n", name, groupsWithVersions, outputPackage)
+	log.Logger().Infof("generating %s structs for %s at %s\n", name, groupsWithVersions, outputPackage)
 
 	generateCommand := util.Command{
 		Name: filepath.Join(util.GoPathBin(gopath), generator),
@@ -44,9 +46,7 @@ func defaultGenerate(generator string, name string, groupsWithVersions []string,
 		inputDirsStr := strings.Join(inputDirs, ",")
 		generateCommand.Args = append(generateCommand.Args, "--input-dirs", inputDirsStr)
 	}
-	for _, arg := range args {
-		generateCommand.Args = append(generateCommand.Args, arg)
-	}
+	generateCommand.Args = append(generateCommand.Args, args...)
 	out, err := generateCommand.RunWithoutRetry()
 	if err != nil {
 		return errors.Wrapf(err, "running %s, output %s", generateCommand.String(), out)

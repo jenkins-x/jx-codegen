@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jenkins-x/jx-logging/pkg/log"
+
 	"github.com/cenkalti/backoff"
 )
 
@@ -113,18 +115,12 @@ func (c *Command) Attempts() int {
 
 // DidError returns a boolean if any error occurred in any execution of the command
 func (c *Command) DidError() bool {
-	if len(c.Errors) > 0 {
-		return true
-	}
-	return false
+	return len(c.Errors) > 0
 }
 
 // DidFail returns a boolean if the command could not complete (errored on every attempt)
 func (c *Command) DidFail() bool {
-	if len(c.Errors) == c.attempts {
-		return true
-	}
-	return false
+	return len(c.Errors) == c.attempts
 }
 
 // Error returns the last error
@@ -168,7 +164,7 @@ func (c *Command) RunWithoutRetry() (string, error) {
 	var r string
 	var e error
 
-	AppLogger().Debugf("Running %s %s %s", JoinMap(c.Env, " ", "="), c.Name, strings.Join(c.Args, " "))
+	log.Logger().Debugf("Running %s %s %s", JoinMap(c.Env, " ", "="), c.Name, strings.Join(c.Args, " "))
 
 	r, e = c.run()
 	c.attempts++
